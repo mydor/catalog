@@ -1,0 +1,10 @@
+asyncpg
+numpy
+openpyxl
+pandas
+pgvector
+psycopg
+psycopg-binary
+sqlalchemy
+sqlalchemy[asyncio]
+typing_extensions
