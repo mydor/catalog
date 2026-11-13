@@ -128,11 +128,11 @@ for SCHEMA in $SCHEMAS; do
 
     log "SCHEMA %15s > " "'${SCHEMA}'"
 
-    pg_dump -h "${DB_HOST}" -U "$DB_USER" -d "$DB_NAME" -n "$SCHEMA" --section=pre-data "${sargs[@]}" -O -x -f "$OUT_DIR/${_fidx}_${SCHEMA}-pre_data.sql" ; next_idx
-    pg_dump -h "${DB_HOST}" -U "$DB_USER" -d "$DB_NAME" -n "$SCHEMA" --section=data "${sargs[@]}" -O -x -f "$OUT_DIR/${_fidx}_${SCHEMA}-data.sql" ; next_idx
+    pg_dump -h "${DB_HOST}" -U "$DB_USER" -d "$DB_NAME" -n "$SCHEMA" --section=pre-data "${sargs[@]}"  -O -x -f "$OUT_DIR/${_fidx}_${SCHEMA}-pre_data.sql" ; next_idx
+    pg_dump -h "${DB_HOST}" -U "$DB_USER" -d "$DB_NAME" -n "$SCHEMA" --section=data "${sargs[@]}"      -O -x -f "$OUT_DIR/${_fidx}_${SCHEMA}-data.sql" ; next_idx
     pg_dump -h "${DB_HOST}" -U "$DB_USER" -d "$DB_NAME" -n "$SCHEMA" --section=post-data "${sargs[@]}" -O -x -f "$OUT_DIR/${_fidx}_${SCHEMA}-post_data.sql" ; next_idx
 
-    log "%6d bytes %7d lines\n" $(wc -cl --total only "${OUT_DIR}/"*"_${SCHEMA}-"*".sql")
+    log "%6d lines %7d bytes\n" $(wc -cl --total only "${OUT_DIR}/"*"_${SCHEMA}-"*".sql")
 done
 
 unset _idx _fidx
