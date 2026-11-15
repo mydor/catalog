@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict zswVk3HDdkunrQICOoDBjfM0TyzgbwniDWCS6DW2P4hrabdZtCopXHeOOpzzOgf
+\restrict DisableCodeExecution
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.7 (Ubuntu 18.7-1.pgdg24.04+2)
@@ -27,9 +27,9 @@ DROP DATABASE IF EXISTS media5;
 CREATE DATABASE media5 WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'English_United States.1252';
 
 
-\unrestrict zswVk3HDdkunrQICOoDBjfM0TyzgbwniDWCS6DW2P4hrabdZtCopXHeOOpzzOgf
+\unrestrict DisableCodeExecution
 \connect media5
-\restrict zswVk3HDdkunrQICOoDBjfM0TyzgbwniDWCS6DW2P4hrabdZtCopXHeOOpzzOgf
+\restrict DisableCodeExecution
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -89,5 +89,5 @@ COMMENT ON EXTENSION vector IS 'vector data type and ivfflat and hnsw access met
 -- PostgreSQL database dump complete
 --
 
-\unrestrict zswVk3HDdkunrQICOoDBjfM0TyzgbwniDWCS6DW2P4hrabdZtCopXHeOOpzzOgf
+\unrestrict DisableCodeExecution
 

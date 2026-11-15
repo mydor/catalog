@@ -89,6 +89,11 @@ error() {
     printf "$@" >&2
 }
 
+fail() {
+    error "$@"
+    exit 1
+}
+
 abort() {
     error "\n\n Ctrl+C detected. Aborting script...\n"
     exit 130
@@ -110,27 +115,41 @@ SCHEMAS=$(
 
 schemas2args "${SCHEMAS}" "-N"
 
-mkdir "${OUT_DIR}" &>/dev/null && log "Created backup directory '$OUT_DIR'\n"
+mkdir -p "${OUT_DIR}" &>/dev/null && log "Created backup directory '$OUT_DIR'\n" || fail "Error creating directory ${OUT_DIR}\n"
 
 log "Dumping to ${OUT_DIR}\n"
 
 # Dump the global info
 log "Global\n"
-pg_dumpall -h "${DB_HOST}" -U "${DB_USER}" --roles-only --no-role-passwords -f "${OUT_DIR}/${_fidx}_roles.sql" ; next_idx
+pg_dumpall -h "${DB_HOST}" \
+           -U "${DB_USER}" \
+           --roles-only \
+           --no-role-passwords \
+           --restrict-key="DisableCodeExecution" \
+           -f "${OUT_DIR}/${_fidx}_roles.sql" && next_idx || fail "\n"
 
 # Dump the non-schema info for the database
 log "DB '${DB_NAME}'\n"
-pg_dump    -h "${DB_HOST}" -U "${DB_USER}" -d "${DB_NAME}" -C -c -s -O -x --if-exists "${args[@]}" -f "${OUT_DIR}/${_fidx}_database_globals.sql" ; next_idx
+pg_dump    -h "${DB_HOST}" \
+           -U "${DB_USER}" \
+           -d "${DB_NAME}" \
+           -C \
+           -c \
+           -s \
+           -O \
+           -x \
+           --if-exists "${args[@]}" \
+           --restrict-key="DisableCodeExecution" \
+           -f "${OUT_DIR}/${_fidx}_database_globals.sql" && next_idx || fail "\n"
 
 # Create the *data subdirectories, and store their names
 for section in "${SECTIONS[@]}"; do
     sub_dir="${_fidx}_${section}"
-    mkdir "${OUT_DIR}/${sub_dir}" ; next_idx
+    mkdir -p "${OUT_DIR}/${sub_dir}" &>/dev/null && next_idx || fail "Error creating directory ${OUT_DIR}/${sub_dir}\n"
     SECTIONS_MAP+=(["${section}"]="${sub_dir}")
 done
 
 # Dump the pre-data, data, post-data for each schema
-next_idx 0
 for SCHEMA in $SCHEMAS; do
     log "SCHEMA %15s > " "'${SCHEMA}'"
 
@@ -139,7 +158,16 @@ for SCHEMA in $SCHEMAS; do
     
         sub_dir="${OUT_DIR}/${SECTIONS_MAP["${section}"]}"
     
-        pg_dump -h "${DB_HOST}" -U "$DB_USER" -d "$DB_NAME" -n "$SCHEMA" --section="${section}" "${sargs[@]}" -O -x -f "${sub_dir}/${_fidx}_${SCHEMA}.sql"
+        pg_dump -h "${DB_HOST}" \
+                -U "$DB_USER" \
+                -d "$DB_NAME" \
+                -n "$SCHEMA" \
+                --restrict-key="DisableCodeExecution" \
+                --section="${section}" \
+                "${sargs[@]}" \
+                -O \
+                -x \
+                -f "${sub_dir}/${_fidx}_${SCHEMA}.sql" || fail "\n"
 
     done
 

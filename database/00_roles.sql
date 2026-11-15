@@ -2,7 +2,7 @@
 -- PostgreSQL database cluster dump
 --
 
-\restrict V3Qwvpkkq1SLMlE39GOJmTBgk1rcMpoHNCFTlWoS8EqL7KGkdPX6Idfoj0FE9N1
+\restrict DisableCodeExecution
 
 SET default_transaction_read_only = off;
 
@@ -35,7 +35,7 @@ GRANT pg_write_all_data TO msmith WITH INHERIT TRUE GRANTED BY postgres;
 
 
 
-\unrestrict V3Qwvpkkq1SLMlE39GOJmTBgk1rcMpoHNCFTlWoS8EqL7KGkdPX6Idfoj0FE9N1
+\unrestrict DisableCodeExecution
 
 --
 -- PostgreSQL database cluster dump complete
